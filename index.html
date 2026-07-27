@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2B3A2E">
+<title>Airpod · Guest Guide</title>
+
+<!-- ================================================================= -->
+<!--   HOW TO EDIT THIS BOOK  (read me first, Captain!)                -->
+<!--                                                                   -->
+<!--   • Change text only INSIDE the "quote marks".                    -->
+<!--   • Blanks marked  ✎ ADD ...  are for you to fill in.             -->
+<!--                                                                   -->
+<!--   ADDING PHOTOS:                                                  -->
+<!--   • Every photo is an  img:"..."  slot. Paste an image LINK       -->
+<!--     between the quotes, e.g.  img:"https://.../aircon.jpg"        -->
+<!--   • Easiest: upload the photo into your GitHub repo, then use     -->
+<!--     its path, e.g.  img:"photos/aircon.jpg"                       -->
+<!--   • Leave it empty  img:""  and the card just shows text.         -->
+<!--                                                                   -->
+<!--   Two blocks below:  SITE = shared info · UNITS = each cabin.     -->
+<!-- ================================================================= -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Jost:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --green-deep:#2B3A2E; --green:#3D5240; --green-soft:#4E6551;
+    --cream:#F4F0E8; --cream-dim:#E8E1D3;
+    --taupe:#E5DBCB; --taupe-deep:#C7B393;
+    --ink:#28322A; --muted:#857F73; --line:#DED4C4;
+    --shadow:0 10px 40px rgba(20,28,22,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:'Jost',system-ui,sans-serif;background:var(--green-deep);color:var(--ink);line-height:1.55;overflow:hidden}
+  #app{position:relative;max-width:460px;height:100dvh;margin:0 auto;background:var(--cream);overflow:hidden;box-shadow:var(--shadow)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    transition:transform .38s cubic-bezier(.4,0,.2,1),opacity .3s ease}
+  .screen.hidden{transform:translateX(100%);opacity:0;pointer-events:none}
+  .screen.back-hidden{transform:translateX(-16%) scale(.98);opacity:0;pointer-events:none}
+
+  /* COVER */
+  #cover{background:var(--green-deep);color:var(--cream);align-items:center;justify-content:center;text-align:center;
+    padding:56px 34px calc(46px + env(safe-area-inset-bottom));z-index:40}
+  #cover.gone{transform:translateY(-102%);opacity:0;pointer-events:none}
+  #cover .eyebrow{font-size:12px;letter-spacing:.5em;text-transform:uppercase;color:var(--taupe-deep);margin-bottom:20px;padding-left:.5em}
+  #cover h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(58px,20vw,84px);line-height:.9;letter-spacing:-.01em}
+  #cover .hero{width:100%;max-width:280px;aspect-ratio:4/5;margin:32px 0;border-radius:6px;overflow:hidden;background:var(--green)}
+  #cover .hero img{width:100%;height:100%;object-fit:cover;display:block}
+  #cover .tagline{font-size:12.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--cream-dim);max-width:280px}
+  .enter-btn{margin-top:36px;border:1px solid var(--taupe-deep);background:transparent;color:var(--cream);
+    font-family:'Jost';font-size:12px;letter-spacing:.32em;text-transform:uppercase;padding:15px 40px;border-radius:100px;cursor:pointer;transition:background .25s,color .25s}
+  .enter-btn:hover{background:var(--taupe-deep);color:var(--green-deep)}
+
+  /* UNIT PICKER */
+  #units{background:var(--cream)}
+  .units-head{text-align:center;padding:calc(48px + env(safe-area-inset-top)) 30px 6px}
+  .units-head .script{font-family:'Dancing Script',cursive;font-weight:600;font-size:42px;color:var(--green);line-height:1}
+  .units-head .sub{margin-top:8px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+  .unit-list{padding:20px 22px calc(40px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:16px}
+  .unit-card{position:relative;display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:18px;padding:14px;cursor:pointer;overflow:hidden;transition:transform .18s ease,box-shadow .2s ease;text-align:left}
+  .unit-card:active{transform:scale(.98)}
+  .unit-card:hover{box-shadow:0 8px 24px rgba(20,28,22,.1)}
+  .unit-thumb{width:88px;height:88px;flex:none;border-radius:12px;overflow:hidden;background:var(--green)}
+  .unit-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .unit-info{flex:1;min-width:0}
+  .unit-info h3{font-family:'Fraunces',serif;font-weight:500;font-size:21px;color:var(--ink);line-height:1.1}
+  .unit-info .desc{font-size:13px;color:var(--muted);margin-top:3px}
+  .unit-info .cap{display:inline-block;margin-top:8px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--green);background:var(--taupe);padding:4px 11px;border-radius:100px;font-weight:500}
+  .unit-arrow{flex:none;color:var(--taupe-deep)}
+  .unit-arrow svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none}
+  .unit-card.locked{cursor:not-allowed;background:#EFEAE0;border-style:dashed}
+  .unit-card.locked .unit-thumb{background:#D9D1C2;filter:grayscale(1) brightness(.96)}
+  .unit-card.locked h3{color:#9A9384}
+  .lock-badge{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:#9A9384;font-weight:500}
+  .lock-badge svg{width:13px;height:13px;stroke:#9A9384;stroke-width:1.7;fill:none}
+
+  /* UNIT HOME */
+  #home{background:var(--cream)}
+  .home-head{position:relative;text-align:center;padding:calc(20px + env(safe-area-inset-top)) 54px 16px}
+  .home-back{position:absolute;left:20px;top:calc(22px + env(safe-area-inset-top));background:none;border:none;cursor:pointer;color:var(--green);padding:4px}
+  .home-back svg{width:22px;height:22px;stroke:var(--green);stroke-width:1.7;fill:none}
+  .home-head .script{font-family:'Dancing Script',cursive;font-weight:600;font-size:34px;color:var(--green);line-height:1}
+  .home-head .unit-name{font-family:'Fraunces',serif;font-size:26px;color:var(--ink);margin-top:2px}
+  .home-head .sub{margin-top:5px;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:12px 22px calc(40px + env(safe-area-inset-bottom))}
+  .tile{background:var(--taupe);border:none;border-radius:16px;aspect-ratio:1/1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:9px;cursor:pointer;transition:transform .18s ease,background .2s ease}
+  .tile:active{transform:scale(.94)}
+  .tile:hover{background:var(--cream-dim)}
+  .tile svg{width:33px;height:33px;stroke:var(--green);stroke-width:1.4;fill:none}
+  .tile span{font-size:10px;letter-spacing:.05em;color:var(--ink);text-transform:uppercase;font-weight:500;text-align:center;padding:0 3px}
+  .home-memo{margin:2px 22px calc(36px + env(safe-area-inset-bottom));background:var(--taupe);border-radius:14px;padding:16px 18px}
+  .home-memo h4{font-family:'Fraunces',serif;font-weight:500;font-size:16px;color:var(--ink);margin-bottom:5px}
+  .home-memo p{font-size:12.5px;color:#5c574d;line-height:1.55}
+  .callout{background:var(--green-deep);color:var(--cream);border-radius:12px;padding:14px 15px;margin:2px 0 14px;font-size:14px;font-weight:500;display:flex;gap:11px;align-items:flex-start;line-height:1.45}
+  .callout svg{width:20px;height:20px;flex:none;stroke:var(--taupe-deep);stroke-width:1.5;fill:none;margin-top:1px}
+
+  /* DETAIL */
+  #detail{background:var(--cream);z-index:20}
+  .topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;
+    padding:calc(16px + env(safe-area-inset-top)) 22px 16px;background:var(--green-deep);color:var(--cream)}
+  .back{background:none;border:none;cursor:pointer;color:var(--cream);display:flex;align-items:center;padding:4px;margin-left:-4px}
+  .back svg{width:22px;height:22px;stroke:var(--cream);stroke-width:1.6;fill:none}
+  .topbar .tb-txt{min-width:0}
+  .topbar h2{font-family:'Fraunces',serif;font-weight:500;font-size:22px;letter-spacing:.01em;line-height:1.1}
+  .topbar .tb-unit{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe-deep)}
+  .detail-body{padding:26px 24px calc(56px + env(safe-area-inset-bottom))}
+
+  .lead{font-size:14.5px;color:var(--muted);margin-bottom:22px}
+  .sub-note{font-size:13.5px;color:var(--muted);margin:0 2px 16px}
+  .group-h{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe-deep);font-weight:600;margin:24px 2px 12px}
+  .detail-body > .group-h:first-child{margin-top:2px}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:17px 18px;margin-bottom:13px}
+  .card h3{font-family:'Fraunces',serif;font-weight:500;font-size:17.5px;color:var(--ink);margin-bottom:5px}
+  .card p{font-size:14.5px;color:#5c574d}
+
+  /* photo cards (amenities highlights / how-tos / places) */
+  .pcard{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:13px}
+  .card-photo{width:100%;aspect-ratio:16/10;background:var(--taupe);display:block}
+  .card-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .card-in{padding:15px 17px}
+  .card-in h3{font-family:'Fraunces',serif;font-weight:500;font-size:17.5px;color:var(--ink);margin-bottom:5px}
+  .card-in p{font-size:14.5px;color:#5c574d}
+
+  ol.steps{margin:11px 0 0;padding:0;list-style:none;counter-reset:s}
+  ol.steps li{position:relative;padding:9px 0 9px 34px;font-size:14px;color:#4f4a41;border-bottom:1px solid var(--line);counter-increment:s}
+  ol.steps li:last-child{border-bottom:none}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:22px;height:22px;border-radius:50%;
+    background:var(--green);color:var(--cream);font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:500}
+  .tip{margin-top:12px;font-size:13px;color:var(--muted);font-style:italic}
+
+  .kv{display:flex;justify-content:space-between;align-items:center;padding:15px 2px;border-bottom:1px solid var(--line)}
+  .kv:last-child{border-bottom:none}
+  .kv .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .kv .v{font-family:'Fraunces',serif;font-size:18px;color:var(--ink);text-align:right}
+
+  .wifi-box{background:var(--green-deep);color:var(--cream);border-radius:16px;padding:24px 22px;margin-bottom:18px;text-align:center}
+  .wifi-box .lbl{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--taupe-deep)}
+  .wifi-box .val{font-family:'Fraunces',serif;font-size:24px;margin:4px 0 14px;word-break:break-all}
+  .copy-btn{background:var(--taupe-deep);color:var(--green-deep);border:none;font-family:'Jost';font-weight:500;font-size:11px;
+    letter-spacing:.2em;text-transform:uppercase;padding:11px 26px;border-radius:100px;cursor:pointer;transition:opacity .2s}
+  .copy-btn:active{opacity:.7}
+
+  ul.rules{list-style:none}
+  ul.rules li{position:relative;padding:12px 0 12px 24px;font-size:14px;color:#4f4a41;border-bottom:1px solid var(--line)}
+  ul.rules li:last-child{border-bottom:none}
+  ul.rules li::before{content:"";position:absolute;left:2px;top:18px;width:6px;height:6px;border-radius:50%;background:var(--taupe-deep)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:100px;padding:8px 14px}
+
+  .maplink{display:flex;align-items:center;justify-content:center;gap:9px;background:var(--green);color:var(--cream);
+    text-decoration:none;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;padding:16px;border-radius:100px;margin-top:6px}
+  .maplink svg{width:17px;height:17px;stroke:var(--cream);stroke-width:1.6;fill:none}
+  .place-map{display:inline-flex;align-items:center;gap:6px;margin-top:11px;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--green);text-decoration:none;font-weight:500}
+  .place-map svg{width:14px;height:14px;stroke:var(--green);stroke-width:1.7;fill:none}
+  .addr{font-family:'Fraunces',serif;font-size:20px;color:var(--ink);margin-bottom:6px}
+  .addr-sub{font-size:14px;color:var(--muted);margin-bottom:18px}
+
+  .toast{position:fixed;left:50%;bottom:38px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--cream);
+    font-size:13px;letter-spacing:.04em;padding:11px 22px;border-radius:100px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:60}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (prefers-reduced-motion: reduce){.screen,#cover{transition:none}}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <section class="screen" id="cover">
+    <div class="eyebrow">Welcome to</div>
+    <h1 id="cv-name">Airpod</h1>
+    <div class="hero"><img id="cv-img" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+    <div class="tagline" id="cv-tag"></div>
+    <button class="enter-btn" onclick="showUnits()">Enter the guide</button>
+  </section>
+
+  <section class="screen hidden" id="units">
+    <div class="units-head"><div class="script">Choose your</div><div class="sub">Cabin</div></div>
+    <div class="unit-list" id="unit-list"></div>
+  </section>
+
+  <section class="screen hidden" id="home">
+    <div class="home-head">
+      <button class="home-back" onclick="backToUnits()" aria-label="Change cabin"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="script">Your Guide</div>
+      <div class="unit-name" id="hm-name"></div>
+      <div class="sub" id="hm-sub"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="home-memo" id="home-memo"></div>
+  </section>
+
+  <section class="screen hidden" id="detail">
+    <div class="topbar">
+      <button class="back" onclick="backToHome()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="tb-txt"><div class="tb-unit" id="dt-unit"></div><h2 id="dt-title"></h2></div>
+    </div>
+    <div class="detail-body" id="dt-body"></div>
+  </section>
+</div>
+<div class="toast" id="toast">Copied</div>
+
+<script>
+/* ================================================================= */
+/*   ★★★  EDIT THE TWO BLOCKS BELOW  ★★★                            */
+/* ================================================================= */
+
+
+/* =================================================================
+   SITE  —  shared info (same for every cabin)
+   ================================================================= */
+const SITE = {
+
+  brand      : "Airpod",
+  coverTag   : "Forest hideaway cabins in Taytay · 30–45 minutes from Manila",
+  coverImage : "https://a0.muscache.com/im/pictures/hosting/Hosting-881624217962132862/original/42ab5174-f388-4b86-8d96-e2833f100b63.jpeg?im_w=720",
+  area       : "Taytay, Rizal",
+
+  /* --- Host / contact (shown in Emergency) --- */
+  hostName  : "Lauren",
+  hostMsg   : "As per Airbnb policy, we keep all communication within the app. Please message us on Airbnb any time you need anything — we're always happy to help. After 8:00 PM, only emergency concerns are accommodated.",
+
+  /* --- Directions + getting around --- */
+  address    : "The Airpod — Private Villa",
+  addressSub : "Taytay, Rizal, Philippines",
+  mapsUrl    : "https://share.google/uyD930gQux2vQrYOY",
+  mapsAltUrl : "https://maps.app.goo.gl/fz8XSEtRwMUKV3vU9",
+  finding    : "Search \"AIRPOD PRIVATE VILLAS\" (or \"ERAS Events and Wellness Place\" as an alternative pin). Enter the JDC compound and go through the big brown gate beside the green building — you shouldn't reach the dead-end of the road. On arrival, please proceed to the guard house to register your vehicle and guest names.",
+  transport : [
+    { name:"By car", note:"The easiest way here — about 30–45 minutes from Manila. Free parking on-site." },
+    { name:"Grab / taxi", note:"Grab works well to and from the area. Pin the exact drop-off your host sends you." },
+    { name:"Good to remember", note:"The last stretch from parking to the cabin is down a flight of stairs." },
+  ],
+
+  /* --- Good to know (shown at the end of FAQs) --- */
+  goodToKnow : [
+    { name:"Access is via stairs", note:"The cabins sit beside a cliff for the forest views. You'll walk down a flight of stairs from parking — part of the charm, but not ideal for seniors or heavy bags." },
+    { name:"You'll meet nature", note:"In the woods it's normal to see or hear birds, insects, geckos and small wildlife. They're harmless and part of the peaceful setting." },
+    { name:"Mosquito hour (5–6 PM)", note:"We're near a natural water source, so mosquitoes are busier around 5–6 PM. Repellent is provided — just keep glass doors closed during this hour." },
+    { name:"Rain or shine", note:"The cabins are a cozy retreat whatever the weather. We recommend checking the forecast before your trip." },
+  ],
+
+  /* --- Things to do (grouped; add a photo link in each img:"") --- */
+  todo : [
+    { heading:"Sights & culture", items:[
+      { name:"Pinto Art Museum", note:"Hillside galleries and gardens with a café — one of Antipolo's must-sees.", img:"", url:"https://maps.app.goo.gl/myDURjzHHKBu5Z3EA" },
+      { name:"Shrine of Our Lady of Peace & Good Voyage", note:"The Antipolo Cathedral — patroness of travelers. Lovely paired with a food trip up the hills.", img:"", url:"https://maps.app.goo.gl/wqKe7NNJpu7QYQ8R7" },
+    ]},
+    { heading:"Shop · Eat · Cinema", items:[
+      { name:"Robinsons Antipolo", note:"Mall with shops, restaurants and a cinema — great for a rainy day or supplies.", img:"", url:"https://maps.app.goo.gl/L7mVNTGxP4Ciyjo7A" },
+    ]},
+    { heading:"Family fun", items:[
+      { name:"Vest Infiniplay", note:"The biggest indoor playground in Antipolo — great for kids and the young at heart.", img:"", url:"https://maps.app.goo.gl/i6iqmQwXmHjmzAM49" },
+    ]},
+  ],
+
+  /* --- Places to eat (grouped; add a photo link in each img:"") --- */
+  eat : [
+    { heading:"Nature restaurants", items:[
+      { name:"Tahanan Bistro", note:"Nature-set dining — by reservation.", img:"", url:"https://maps.app.goo.gl/DoqhRN4tcCbSAi2X6" },
+      { name:"Casa Melifera", note:"Garden restaurant surrounded by greenery.", img:"", url:"https://maps.app.goo.gl/zKLH9zjsutsgdHdq7" },
+      { name:"Burrow Cafe", note:"Relaxed café tucked into nature.", img:"", url:"https://maps.app.goo.gl/6JQ78hGY7ziTVQqG7" },
+    ]},
+    { heading:"Date night · city lights", items:[
+      { name:"Vieux Chalet", note:"Swiss restaurant famous for its city-lights view — lovely for a date night.", img:"", url:"https://maps.app.goo.gl/SkWhmeyP6C5M4Ngv5" },
+    ]},
+    { heading:"Cafés & breakfast", items:[
+      { name:"Kapetita Cafe", note:"Cozy neighbourhood coffee spot.", img:"", url:"https://maps.app.goo.gl/LcwtzgYzz3Hubffa6" },
+      { name:"Drip Kofi", note:"Specialty coffee for your morning cup.", img:"", url:"https://maps.app.goo.gl/nbrmL97stjdQPGHb6" },
+      { name:"Cocina Berenguer", note:"Local kitchen and café worth a visit.", img:"", url:"https://maps.app.goo.gl/G3Nbg1R8A635M3pq5" },
+      { name:"UnCafe", note:"Laid-back café for a chill afternoon.", img:"", url:"https://maps.app.goo.gl/XdfEA8AjuQFYda3L6" },
+    ]},
+    { heading:"Bars & drinks", items:[
+      { name:"Marcelina Bar and Restau", note:"Bar and restaurant for evening drinks.", img:"", url:"https://maps.app.goo.gl/tynnQs1GD93jGJJK7" },
+      { name:"Perot Restau Bar and Grill", note:"Grill and drinks with a casual vibe.", img:"", url:"https://maps.app.goo.gl/9otYQW8fVPxMBGQGA" },
+    ]},
+  ],
+
+  /* --- Food delivery via Grab --- */
+  delivery : [
+    { name:"Eat Fresh — Hong Kong Street Food (Taytay)", note:"Chinese street-food favourites.", img:"", linkLabel:"Order on Grab", url:"https://r.grab.com/g/6-20260107_133846_38af0e6225294c43a67e6243a5259e2c_MEXMPS-2-C7C3UATJGNDTJ6" },
+    { name:"Pizza Telefono", note:"Pizza.", img:"", linkLabel:"Order on Grab", url:"https://r.grab.com/g/6-20260107_134001_38af0e6225294c43a67e6243a5259e2c_MEXMPS-2-C2AAJ6TDAZA1WE" },
+    { name:"Army Navy", note:"Burgers and burritos.", img:"", linkLabel:"Order on Grab", url:"https://r.grab.com/g/6-20260107_134058_38af0e6225294c43a67e6243a5259e2c_MEXMPS-2-C3NUA4CGAK5VEE" },
+    { name:"Mr. Mediterranean", note:"Shawarma and kebab.", img:"", linkLabel:"Order on Grab", url:"https://r.grab.com/g/6-20260107_134153_38af0e6225294c43a67e6243a5259e2c_MEXMPS-2-C3TAKFL2GGBAJN" },
+    { name:"Leon Authentic Mexican", note:"Mexican.", img:"", linkLabel:"Order on Grab", url:"https://r.grab.com/g/6-20260107_134313_38af0e6225294c43a67e6243a5259e2c_MEXMPS-2-C4MDCUV1FCDAVE" },
+    { name:"HaLong Bay", note:"Vietnamese pho and more.", img:"", linkLabel:"Order on Grab", url:"https://r.grab.com/g/6-20260107_134425_38af0e6225294c43a67e6243a5259e2c_MEXMPS-2-C7UDGECJCVACL6" },
+    { name:"Ca Phe Saigon", note:"Vietnamese coffee and eats.", img:"", linkLabel:"Order on Grab", url:"https://r.grab.com/g/6-20260107_134512_38af0e6225294c43a67e6243a5259e2c_MEXMPS-2-CZAKMGCVL3JJTN" },
+    { name:"Cafe 0110", note:"Japanese.", img:"", linkLabel:"Order on Grab", url:"https://r.grab.com/g/6-20260726_184204_38af0e6225294c43a67e6243a5259e2c_MEXMPS-2-C6LTRKNBAYLJBE" },
+  ],
+
+  /* --- Groceries, convenience stores & shops (grouped) --- */
+  grocery : [
+    { heading:"Convenience stores", items:[
+      { name:"O! Save Melendrez", note:"Quick essentials nearby.", img:"", url:"https://maps.app.goo.gl/oH3XYrHp3mR6u7ey5" },
+      { name:"Alfamart Melendres", note:"Snacks, drinks and basics.", img:"", url:"https://maps.app.goo.gl/ejeyBiXCu8wgaQT8A" },
+      { name:"Shell Select", note:"Convenience store at the Shell station.", img:"", url:"https://maps.app.goo.gl/1JcdcWmzn37nXUU97" },
+      { name:"Puregold Minimart", note:"Grocery basics in a smaller format.", img:"", url:"https://maps.app.goo.gl/efWh5f1T4GCAcDbq5" },
+    ]},
+    { heading:"Groceries", items:[
+      { name:"Waltermart Antipolo", note:"Full grocery for a proper stock-up.", img:"", url:"https://maps.app.goo.gl/hUf4TrWFDuyhPkYv6" },
+      { name:"Waltermart Taytay", note:"Full grocery, Taytay side.", img:"", url:"https://maps.app.goo.gl/bFNED3XgPCs9g2j16" },
+    ]},
+  ],
+
+  /* --- Emergency contacts --- */
+  emergency : [
+    { name:"Clinica Antipolo — nearest hospital", note:"(02) 8695 9480", phone:"0286959480", url:"https://maps.app.goo.gl/7FLsuBGReQ6Sx6bb6" },
+    { name:"Mercury Drug Taytay — pharmacy", note:"For medicine and health needs.", url:"https://maps.app.goo.gl/uZhNK65yzcNDtvcN8" },
+    { name:"Watsons, Waltermart Antipolo — pharmacy", note:"Another pharmacy option nearby.", url:"https://maps.app.goo.gl/uTfCZW2pUQ8J5bTi6" },
+    { name:"Taytay Police Station", note:"Brgy Dolores, Taytay, Rizal. Smart: 0998-598-5730 · Globe: 0917-163-3556", phone:"09985985730" },
+    { name:"BFP Taytay — Fire Station", note:"Bureau of Fire Protection, Taytay.", phone:"09171489964" },
+  ],
+};
+
+
+/* =================================================================
+   UNITS  —  each cabin's own info.  Airpod 2 is locked.
+   Each unit can have a  features:[]  list = photo highlights.
+   ================================================================= */
+const UNITS = {
+
+  airpod1 : {
+    name:"Airpod 1", desc:"Peaceful couple's retreat by the river", capacity:"Up to 3 guests",
+    image:"https://a0.muscache.com/im/pictures/hosting/Hosting-1557041992633504083/original/cf656803-8c23-4e60-980f-d33db8be2c10.jpeg?im_w=720",
+    locked:false,
+    layout:"1 bedroom · King bed + couch · 1 bath",
+    checkin:"3:00 PM – 9:00 PM", checkout:"Before 11:00 AM",
+    checkinNote:"Self check-in with the on-site staff. Your host sends exact entry details before you arrive. Park at the top, then head down the stairs to your villa.",
+    checkoutHighlight:"Please send photos of the room to the Airbnb app before leaving.",
+    checkoutIntro:"As you prepare to go, kindly check that these are all accounted for:",
+    checkoutList:["Plates and saucers","Spoons and forks","Mugs","Bath towels","No stains on the sheets"],
+    checkoutNote:"Kindly place the keys back inside the keybox. If you need help with your bags, please message us on Airbnb.",
+    wifiName:"Airpod Guest", wifiPass:"Relax@airpod",
+    wifiNote:"Heads up: the \"R\" in Relax is capital — Relax@airpod.",
+
+    parking:"Free on-site parking — we reserve 1 slot for you (maximum capacity 3 guests). From the parking area, take a flight of stairs down to the villa past the overlooking garden. Please travel light; our staff are happy to help with heavy luggage.",
+
+    /* photo highlights — put an image link in each img:"" */
+    features : [
+      { name:"King-size bed", note:"Wake up to full-glass river views.", img:"" },
+      { name:"Full-glass river views", note:"Floor-to-ceiling windows over the rushing river.", img:"" },
+      { name:"Mini kitchenette", note:"Small refrigerator, toaster, microwave oven and kettle — for heating only, no cooking.", img:"" },
+      { name:"Parking for 1 car", note:"One reserved slot at the top of the property.", img:"" },
+      { name:"Private bonfire area", note:"One complimentary firewood bundle. Enjoy 7:00–10:30 PM; message us 7:00–9:00 PM (last call) to have staff light it.", img:"" },
+      { name:"Private bathroom", note:"Clean and private, just for you.", img:"" },
+    ],
+    amenities : [
+      "King-size bed","Air conditioning","Fast wifi","Smart TV — Netflix + cable","Private bathroom",
+      "Mini kitchenette (heating only)","Small refrigerator","Microwave","Oven toaster","Kettle & mugs","Fresh linens",
+      "Private bonfire area","Full-glass river views","Private outdoor space","Parking for 1 car",
+    ],
+    rules : [
+      "Please respect check-in and check-out times.",
+      "Smoking is allowed outdoors only — never inside the villa.",
+      "Quiet hours 10:30 PM – 7:00 AM — let's keep nature peaceful 😊",
+      "Bonfire in the designated area, 7:00 PM – 10:30 PM. One complimentary firewood bundle — message us 7:00–9:00 PM (last call) to have staff light it.",
+      "Please wash used dishes and dispose of trash before checkout.",
+      "Be mindful of nature and wildlife; handle furniture and decor with care.",
+      "No unregistered guests. Day visitors welcome until 7:00 PM (overstaying fee: ₱1,500/head).",
+      "No wild parties or illegal activities — violation means immediate cancellation.",
+      "No pets, please (sorry!).",
+    ],
+    faqs : [
+      { q:"How do I check in?", a:"On arrival, please register your vehicle and guest names at the guard house. Allot 5 minutes as we validate your booking." },
+      { q:"Where do I park?", a:"We reserve 1 parking slot for you at the top of the property. From there, take the stairs down to the villa." },
+      { q:"Can we use the bonfire?", a:"Yes! One complimentary bundle of firewood is provided. You can enjoy the bonfire from 7:00 PM to 10:30 PM — to have our staff light it, message us on Airbnb between 7:00 and 9:00 PM (last call). Bring s'mores and your favourite drinks 🔥" },
+      { q:"Can we bring extra guests?", a:"Bookings follow the confirmed guest count. Extra guests not in the booking are charged ₱1,500 per guest, per night on-site — please update your booking on the app before arrival. Maximum capacity is 3 guests." },
+      { q:"Is housekeeping included?", a:"Your unit is professionally cleaned before check-in. Daily housekeeping and linen/towel changes aren't included in the rate (linen changes are provided only for long stays of 5+ nights). Mid-stay cleaning or fresh linens are available for an extra charge — just message us." },
+      { q:"Is there aircon and wifi?", a:"Yes — the cabin is air-conditioned with fast wifi. See the Wifi and How-Tos sections." },
+      { q:"How do we order food?", a:"There's no in-house restaurant, but Grab and Foodpanda both deliver here. Deliveries can only reach the guard house, not the villa door — we'll help you bring them down." },
+    ],
+    howtos : [
+      { name:"Air-conditioner (Daikin)", img:"", steps:[
+          "Power on: press the power button on the white Daikin remote.",
+          "Check the mode is set to Cooling (the ❄️ snowflake symbol, not the fan).",
+          "Use the arrow buttons to set your desired temperature.",
+          "Please switch off the AC whenever you leave the cabin.",
+        ], tip:"" },
+      { name:"Microwave", img:"", steps:[
+          "Push the white button to open the door.",
+          "Use microwave-safe dishes only — never metal, steel, or aluminium foil.",
+          "Turn the power dial to Medium or High.",
+          "Turn the timer knob to start heating.",
+        ], tip:"Don't force the timer knob back to zero. If your food's ready early, just unplug the unit." },
+      { name:"Smart TV & cable", img:"", steps:[
+          "Press power on the Samsung remote.",
+          "Smart TV apps: switch input to HDMI 1, then use the Xiaomi remote to navigate.",
+          "Cable TV: switch input to HDMI 2, then use the Cignal remote to change channels.",
+        ], tip:"" },
+    ],
+  },
+
+  airpod2 : {
+    name:"Airpod 2", desc:"Currently not available", capacity:"—",
+    image:"https://a0.muscache.com/im/pictures/hosting/Hosting-881624217962132862/original/a6b439c4-3c25-4871-8979-1e301112e414.jpeg?im_w=720",
+    locked:true,
+  },
+
+  airpod3 : {
+    name:"Airpod 3", desc:"Forest hideaway for families & barkada", capacity:"Sleeps 6–8 guests",
+    image:"https://a0.muscache.com/im/pictures/hosting/Hosting-881624217962132862/original/42ab5174-f388-4b86-8d96-e2833f100b63.jpeg?im_w=720",
+    locked:false,
+    layout:"2 bedrooms · 5 beds · Separate toilet & bath",
+    checkin:"3:00 PM – 9:00 PM", checkout:"Before 11:00 AM",
+    checkinNote:"Self check-in with the on-site staff. You'll have the whole 2nd-floor villa — veranda, outdoor kitchenette, backyard, bonfire area and parking. Host sends exact entry details before arrival.",
+    checkoutHighlight:"Please send photos of the room to the Airbnb app before leaving.",
+    checkoutIntro:"As you prepare to go, kindly check that these are all accounted for:",
+    checkoutList:["Plates and saucers","Spoons and forks","Mugs","Bath towels","No stains on the sheets"],
+    checkoutNote:"Kindly place the keys back inside the keybox. If you need help with your bags, please message us on Airbnb.",
+    wifiName:"Airpod Guest", wifiPass:"Relax@airpod",
+    wifiNote:"Heads up: the \"R\" in Relax is capital — Relax@airpod.",
+
+    parking:"Free on-site parking — we reserve 2 slots for you (maximum capacity 8 guests). From the parking area, take a flight of stairs down to the villa past the overlooking garden. Please travel light; our staff are happy to help with heavy luggage.",
+
+    features : [
+      { name:"Forestfront veranda", note:"Large glass veranda with outdoor seating.", img:"" },
+      { name:"Bonfire area", note:"One complimentary firewood bundle. Enjoy 7:00–10:30 PM; message us 7:00–9:00 PM (last call) to have staff light it.", img:"" },
+      { name:"Outdoor kitchenette", note:"Cook or reheat meals with ease — plates, spoons, forks, BBQ grill, pan, pot, 2 electric stoves, microwave, kettle, air fryer and rice cooker.", img:"" },
+      { name:"Warm wooden interiors", note:"Sleeps 6–8 across 2 bedrooms.", img:"" },
+    ],
+    amenities : [
+      "Air conditioning","Fast wifi (79 Mbps)","TV + wifi","River & mountain views","Large glass windows",
+      "Forestfront veranda","Bonfire area","Outdoor kitchenette","2 electric stoves","BBQ grill","Air fryer",
+      "Rice cooker","Microwave","Kettle","Pots & pans","Plates & cutlery","Warm wooden interiors",
+      "1 main queen + 1 pullout queen","4 single duplex beds","Free on-site parking","Exterior security cameras",
+    ],
+    rules : [
+      "Please respect check-in and check-out times.",
+      "Smoking is allowed outdoors only — never inside the villa.",
+      "Quiet hours 10:30 PM – 7:00 AM — please keep noise low for neighbours.",
+      "Bonfire in the designated area, 7:00 PM – 10:30 PM. One complimentary firewood bundle — message us 7:00–9:00 PM (last call) to have staff light it.",
+      "Please wash used dishes and dispose of trash before checkout.",
+      "Be mindful of nature and wildlife; handle furniture and decor with care.",
+      "No unregistered guests. Day visitors welcome until 7:00 PM (overstaying fee: ₱1,500/head).",
+      "No wild parties or illegal activities — violation means immediate cancellation.",
+      "No pets, please (sorry!).",
+    ],
+    faqs : [
+      { q:"How do I check in?", a:"On arrival, please register your vehicle and guest names at the guard house. Allot 5 minutes as we validate your booking." },
+      { q:"Where do I park?", a:"We reserve 2 parking slots for you at the top of the property. From there, take the stairs down to the villa." },
+      { q:"Can we use the bonfire?", a:"Yes! One complimentary bundle of firewood is provided. You can enjoy the bonfire from 7:00 PM to 10:30 PM — to have our staff light it, message us on Airbnb between 7:00 and 9:00 PM (last call). Bring s'mores and your favourite drinks 🔥" },
+      { q:"Can we bring extra guests?", a:"Bookings follow the confirmed guest count. Extra guests not in the booking are charged ₱1,500 per guest, per night on-site — please update your booking on the app before arrival. Maximum capacity is 8 guests." },
+      { q:"Is housekeeping included?", a:"Your unit is professionally cleaned before check-in. Daily housekeeping and linen/towel changes aren't included in the rate (linen changes are provided only for long stays of 5+ nights). Mid-stay cleaning or fresh linens are available for an extra charge — just message us." },
+      { q:"Is there aircon and wifi?", a:"Yes — the cabin is air-conditioned with fast wifi. See the Wifi and How-Tos sections." },
+      { q:"How do we order food?", a:"There's no in-house restaurant, but Grab and Foodpanda both deliver here. Deliveries can only reach the guard house, not the villa door — we'll help you bring them down." },
+    ],
+    howtos : [
+      { name:"Air-conditioner (Daikin)", img:"", steps:[
+          "Power on: press the power button on the white Daikin remote.",
+          "Check the mode is set to Cooling (the ❄️ snowflake symbol, not the fan).",
+          "Use the arrow buttons to set your desired temperature.",
+          "Please switch off the AC whenever you leave the cabin.",
+        ], tip:"" },
+      { name:"Microwave", img:"", steps:[
+          "Use microwave-safe dishes only — never metal, steel, or aluminium foil.",
+          "Turn the power dial to Medium or High.",
+          "Turn the timer knob to start heating.",
+        ], tip:"Don't force the timer knob back to zero. If your food's ready early, just unplug the unit." },
+      { name:"Air fryer", img:"", steps:[
+          "Cookware: use air-fryer-safe pans, glass, ceramic or silicone moulds. Never plastic, microwave-only containers, or paper towels.",
+          "Set time: tap the Timer button on the screen, then use + or − to adjust the minutes.",
+          "Set temperature: tap the Temp button, then use + or − to raise or lower the degrees.",
+          "Start / stop: press Play / Pause to begin cooking, or pause any time to check your food.",
+        ], tip:"" },
+    ],
+  },
+
+};
+
+const UNIT_ORDER = ["airpod1","airpod2","airpod3"];
+
+
+/* ================================================================= */
+/*   Below here is the app engine — you don't need to touch it.      */
+/* ================================================================= */
+
+const ICONS = {
+  key:'<path d="M14 8a3 3 0 1 1-4.24 4.24L4 18v2h2l1-1h2v-2h2l1.76-1.76A3 3 0 0 1 14 8Z"/><circle cx="16" cy="7" r="3"/>',
+  wifi:'<path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8 15.5a6 6 0 0 1 8 0"/><circle cx="12" cy="19" r="1.1" fill="currentColor" stroke="none"/>',
+  amenities:'<path d="M4 18v-6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6"/><path d="M4 18h16"/><path d="M6 18v2M18 18v2"/><path d="M7 9V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>',
+  howto:'<circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.4M12 18.6V21M3 12h2.4M18.6 12H21M5.6 5.6l1.7 1.7M16.7 16.7l1.7 1.7M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7"/>',
+  rules:'<circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/>',
+  faq:'<path d="M8 20l-3 2v-4"/><rect x="4" y="4" width="16" height="14" rx="3"/><path d="M9.5 9a2.5 2.5 0 0 1 4 1.8c0 1.5-2 2-2 3"/><circle cx="11.4" cy="15" r=".5" fill="currentColor" stroke="none"/>',
+  directions:'<path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10Z"/><circle cx="12" cy="11" r="2.2"/>',
+  todo:'<path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2Z"/><path d="M9 4v14M15 6v14"/>',
+  eat:'<path d="M6 3v7a2 2 0 0 0 4 0V3M8 10v11"/><path d="M16 3c-1.5 0-2 2-2 4s.5 4 2 4v10"/>',
+  bag:'<path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+  cart:'<circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/><path d="M3 4h2l2.3 11.3a1 1 0 0 0 1 .8h8.2a1 1 0 0 0 1-.8L20 8H6.2"/>',
+  phone:'<path d="M5 4h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5V19a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2Z"/>',
+  emergency:'<rect x="3" y="9" width="15" height="8" rx="2"/><path d="M18 11h2l2 2v3a1 1 0 0 1-1 1h-3"/><circle cx="8" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/><path d="M9 11v3M7.5 12.5h3"/>',
+  lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+};
+
+const SECTIONS = [
+  { id:"checkin",   label:"Check In/Out",  icon:"key" },
+  { id:"wifi",      label:"Wifi",          icon:"wifi" },
+  { id:"amenities", label:"Amenities",     icon:"amenities" },
+  { id:"howtos",    label:"How-Tos",       icon:"howto" },
+  { id:"rules",     label:"House Rules",   icon:"rules" },
+  { id:"faqs",      label:"FAQs",          icon:"faq" },
+  { id:"directions",label:"Getting Here",  icon:"directions" },
+  { id:"todo",      label:"Things to Do",  icon:"todo" },
+  { id:"eat",       label:"Places to Eat", icon:"eat" },
+  { id:"delivery",  label:"Food Delivery", icon:"bag" },
+  { id:"grocery",   label:"Groceries",     icon:"cart" },
+  { id:"emergency", label:"Emergency",     icon:"emergency" },
+];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mapUrl = q => "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+const pinSvg = '<svg viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10Z"/><circle cx="12" cy="11" r="2"/></svg>';
+
+const hasImg = u => u && !String(u).trim().startsWith('✎');
+const photo  = url => hasImg(url) ? `<div class="card-photo"><img src="${esc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : '';
+
+let CURRENT = null;
+
+function placeCards(list){
+  return list.map(p=>{
+    const href  = p.url ? p.url : mapUrl(p.name+' '+SITE.area);
+    const label = p.linkLabel ? p.linkLabel : "View on map";
+    return `<div class="pcard">${photo(p.img)}<div class="card-in">
+      <h3>${esc(p.name)}</h3><p>${esc(p.note)}</p>
+      <a class="place-map" target="_blank" rel="noopener" href="${esc(href)}">${pinSvg} ${esc(label)}</a>
+    </div></div>`;
+  }).join('');
+}
+function groupCards(groups){ return groups.map(g=>`<div class="group-h">${esc(g.heading)}</div>${placeCards(g.items)}`).join(''); }
+function noteCards(list){ return list.map(p=>`<div class="card"><h3>${esc(p.name)}</h3><p>${esc(p.note)}</p></div>`).join(''); }
+
+const phoneSvg = '<svg viewBox="0 0 24 24"><path d="M5 4h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5V19a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>';
+const cameraSvg = '<svg viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.2"/></svg>';
+function emergencyCards(list){
+  return list.map(e=>{
+    let acts='';
+    if(e.phone) acts += `<a class="place-map" href="tel:${esc(String(e.phone).replace(/[^\d+]/g,''))}">${phoneSvg} Call</a>`;
+    if(e.url && hasImg(e.url)) acts += `${e.phone?'&nbsp;&nbsp;&nbsp;':''}<a class="place-map" target="_blank" rel="noopener" href="${esc(e.url)}">${pinSvg} Map</a>`;
+    return `<div class="card"><h3>${esc(e.name)}</h3>${e.note?`<p>${esc(e.note)}</p>`:''}${acts}</div>`;
+  }).join('');
+}
+
+const RENDER = {
+  checkin: u => `
+    <div class="card">
+      <div class="kv"><span class="k">Check in</span><span class="v">${esc(u.checkin)}</span></div>
+      <div class="kv"><span class="k">Check out</span><span class="v">${esc(u.checkout)}</span></div>
+      <div class="kv"><span class="k">Layout</span><span class="v" style="font-size:14px">${esc(u.layout)}</span></div>
+    </div>
+    <div class="card"><h3>Getting in</h3><p>${esc(u.checkinNote)}</p></div>
+    ${(u.checkoutHighlight||u.checkoutIntro) ? `<div class="card"><h3>Before you check out</h3>${
+      u.checkoutHighlight ? `<div class="callout">${cameraSvg}<span>${esc(u.checkoutHighlight)}</span></div>` : ''}${
+      u.checkoutIntro ? `<p>${esc(u.checkoutIntro)}</p>` : ''}${
+      u.checkoutList&&u.checkoutList.length ? `<ul class="rules">${u.checkoutList.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>` : ''}${
+      u.checkoutNote ? `<p style="margin-top:12px">${esc(u.checkoutNote)}</p>` : ''}</div>` : ''}`,
+
+  wifi: u => `
+    <div class="wifi-box">
+      <div class="lbl">Network</div><div class="val">${esc(u.wifiName)}</div>
+      <div class="lbl">Password</div><div class="val" style="margin-bottom:16px">${esc(u.wifiPass)}</div>
+      <button class="copy-btn" onclick="copyPass()">Copy password</button>
+    </div>
+    ${u.wifiNote ? `<div class="card" style="margin-bottom:14px"><p>${esc(u.wifiNote)}</p></div>` : ''}
+    <p class="lead" style="margin:0">Tap copy, then paste it into your phone's wifi settings.</p>`,
+
+  amenities: u => {
+    const feat = (u.features && u.features.length)
+      ? `<div class="group-h">Highlights</div>` + u.features.map(f=>
+          `<div class="pcard">${photo(f.img)}<div class="card-in"><h3>${esc(f.name)}</h3>${f.note?`<p>${esc(f.note)}</p>`:''}</div></div>`).join('')
+      : '';
+    const list = `<div class="group-h">Everything included</div><div class="card"><div class="chips">${
+      u.amenities.map(a=>`<span class="chip">${esc(a)}</span>`).join('')}</div></div>`;
+    return feat + list;
+  },
+
+  howtos: u => (u.howtos||[]).map(h=>
+    `<div class="pcard">${photo(h.img)}<div class="card-in"><h3>${esc(h.name)}</h3>${
+      h.steps&&h.steps.length ? `<ol class="steps">${h.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>` : ''}${
+      h.tip ? `<div class="tip">${esc(h.tip)}</div>` : ''}</div></div>`).join(''),
+
+  rules: u => `<div class="card"><ul class="rules">${u.rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>`,
+
+  faqs: u => (u.faqs||[]).map(f=>`<div class="card"><h3>${esc(f.q)}</h3><p>${esc(f.a)}</p></div>`).join('')
+    + `<div class="group-h">Good to know</div>` + noteCards(SITE.goodToKnow),
+
+  directions: u => `
+    <div class="addr">${esc(SITE.address)}</div>
+    <div class="addr-sub">${esc(SITE.addressSub)}</div>
+    <a class="maplink" target="_blank" rel="noopener" href="${esc(SITE.mapsUrl)}">
+      ${pinSvg.replace('<svg','<svg style="width:17px;height:17px"')} Open in Google Maps</a>
+    <div class="card" style="margin-top:22px"><h3>Finding the villa</h3><p>${esc(SITE.finding)}</p>
+      <a class="place-map" target="_blank" rel="noopener" href="${esc(SITE.mapsAltUrl)}">${pinSvg} Alternative pin</a></div>
+    <div class="card"><h3>Parking & access</h3><p>${esc(u.parking)}</p></div>
+    <div class="group-h">Getting around</div>${noteCards(SITE.transport)}`,
+
+  todo:  () => groupCards(SITE.todo),
+  eat:   () => groupCards(SITE.eat),
+  delivery: () => `<p class="sub-note">No in-house restaurant, but Grab and Foodpanda both deliver here. Note: deliveries reach the guard house only, not the villa door — we'll help you bring them down.</p>${placeCards(SITE.delivery)}`,
+  grocery:  () => groupCards(SITE.grocery),
+
+  emergency: () => `
+    <div class="card"><h3>Need anything?</h3><p>${esc(SITE.hostMsg)}</p></div>
+    <div class="group-h">Emergency contacts</div>${emergencyCards(SITE.emergency)}`,
+};
+
+function sectionTitle(id){ return (SECTIONS.find(s=>s.id===id)||{}).label||""; }
+
+function buildUnits(){
+  $('unit-list').innerHTML = UNIT_ORDER.map(key=>{
+    const u = UNITS[key];
+    if(u.locked){
+      return `<div class="unit-card locked">
+        <div class="unit-thumb"><img src="${esc(u.image)}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+        <div class="unit-info"><h3>${esc(u.name)}</h3><div class="desc">${esc(u.desc)}</div>
+          <div class="lock-badge"><svg viewBox="0 0 24 24">${ICONS.lock}</svg> Not available</div></div></div>`;
+    }
+    return `<button class="unit-card" onclick="openUnit('${key}')">
+      <div class="unit-thumb"><img src="${esc(u.image)}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+      <div class="unit-info"><h3>${esc(u.name)}</h3><div class="desc">${esc(u.desc)}</div>
+        <span class="cap">${esc(u.capacity)}</span></div>
+      <div class="unit-arrow"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></button>`;
+  }).join('');
+}
+
+function buildGrid(){
+  $('grid').innerHTML = SECTIONS.map(s=>`
+    <button class="tile" onclick="openSection('${s.id}')">
+      <svg viewBox="0 0 24 24">${ICONS[s.icon]}</svg><span>${esc(s.label)}</span></button>`).join('');
+}
+
+function fillStatic(){
+  $('cv-name').textContent = SITE.brand;
+  $('cv-tag').textContent = SITE.coverTag;
+  $('cv-img').src = SITE.coverImage;
+  $('home-memo').innerHTML = `<h4>Need anything?</h4><p>${esc(SITE.hostMsg)}</p>`;
+  document.title = SITE.brand + " · Guest Guide";
+}
+
+function showUnits(){ $('cover').classList.add('gone'); $('units').classList.remove('hidden'); }
+function openUnit(key){
+  CURRENT = key; const u = UNITS[key];
+  $('hm-name').textContent = u.name;
+  $('hm-sub').textContent = u.capacity + " · " + u.layout;
+  buildGrid();
+  $('units').classList.add('back-hidden'); $('home').classList.remove('hidden');
+}
+function backToUnits(){ $('home').classList.add('hidden'); $('units').classList.remove('back-hidden'); }
+function openSection(id){
+  const u = UNITS[CURRENT];
+  $('dt-unit').textContent = u.name;
+  $('dt-title').textContent = sectionTitle(id);
+  $('dt-body').innerHTML = (RENDER[id]||(()=> ''))(u);
+  $('detail').scrollTop = 0;
+  $('detail').classList.remove('hidden'); $('home').classList.add('back-hidden');
+}
+function backToHome(){ $('detail').classList.add('hidden'); $('home').classList.remove('back-hidden'); }
+
+function copyPass(){
+  const t=$('toast'); const pass=UNITS[CURRENT].wifiPass;
+  navigator.clipboard?.writeText(pass).then(()=>{ t.textContent="Copied"; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1600); })
+   .catch(()=>{ t.textContent="Password: "+pass; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2400); });
+}
+
+fillStatic();
+buildUnits();
+</script>
+</body>
+</html>
