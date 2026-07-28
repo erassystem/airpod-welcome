@@ -100,8 +100,13 @@
   .home-memo{margin:2px 22px calc(36px + env(safe-area-inset-bottom));background:var(--taupe);border-radius:14px;padding:16px 18px}
   .home-memo h4{font-family:'Fraunces',serif;font-weight:500;font-size:16px;color:var(--ink);margin-bottom:5px}
   .home-memo p{font-size:12.5px;color:#5c574d;line-height:1.55}
-  .callout{background:var(--green-deep);color:var(--cream);border-radius:12px;padding:14px 15px;margin:2px 0 14px;font-size:14px;font-weight:500;display:flex;gap:11px;align-items:flex-start;line-height:1.45}
-  .callout svg{width:20px;height:20px;flex:none;stroke:var(--taupe-deep);stroke-width:1.5;fill:none;margin-top:1px}
+  .callout{background:var(--green-deep);color:var(--cream);border-radius:12px;padding:15px 16px;margin:2px 0 14px}
+  .callout-row{display:flex;gap:11px;align-items:flex-start;font-size:14px;font-weight:500;line-height:1.45}
+  .callout-row svg{width:20px;height:20px;flex:none;stroke:var(--taupe-deep);stroke-width:1.5;fill:none;margin-top:1px}
+  .abtn{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:var(--cream);text-decoration:none;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:500;padding:12px 20px;border-radius:100px;margin-top:12px}
+  .abtn svg{width:15px;height:15px;stroke:var(--cream);stroke-width:1.7;fill:none}
+  .callout .abtn{background:var(--taupe-deep);color:var(--green-deep)}
+  .callout .abtn svg{stroke:var(--green-deep)}
 
   /* DETAIL */
   #detail{background:var(--cream);z-index:20}
@@ -230,6 +235,7 @@ const SITE = {
   /* --- Host / contact (shown in Emergency) --- */
   hostName  : "Lauren",
   hostMsg   : "As per Airbnb policy, we keep all communication within the app. Please message us on Airbnb any time you need anything — we're always happy to help. After 8:00 PM, only emergency concerns are accommodated.",
+  airbnbUrl : "https://www.airbnb.com/messaging/",
 
   /* --- Directions + getting around --- */
   address    : "The Airpod — Private Villa",
@@ -407,7 +413,7 @@ const UNITS = {
   },
 
   airpod2 : {
-    name:"Airpod 2", desc:"Warm and Cozy retro retreat on the 1st floor", capacity:"Sleeps 4 guests",
+    name:"Airpod 2", desc:"Cozy retro retreat on the 1st floor", capacity:"Sleeps 4 guests",
     image:"https://a0.muscache.com/im/pictures/hosting/Hosting-881624217962132862/original/a6b439c4-3c25-4871-8979-1e301112e414.jpeg?im_w=720",
     imgStyle:"transform:scale(1.7);transform-origin:50% 78%;",
     locked:false,
@@ -427,12 +433,12 @@ const UNITS = {
       { name:"Veranda", note:"Outdoor veranda with outdoor seating.", img:"" },
       { name:"Bonfire area", note:"One complimentary firewood bundle. Enjoy 7:00–10:30 PM; message us 7:00–9:00 PM (last call) to have staff light it.", img:"" },
       { name:"Indoor kitchenette", note:"Cook or reheat meals with ease — plates, spoons, forks, BBQ grill, pan, pot, 1 electric stove, microwave, kettle, air fryer and rice cooker.", img:"" },
-      { name:" Cozy retro mid-century interior", note:"Sleeps 4 across 2 rooms.", img:"" },
+      { name:"Cozy retro interiors", note:"Sleeps 4 across 2 rooms.", img:"" },
     ],
     amenities : [
       "Air conditioning","Fast wifi","TV + wifi","Veranda","Bonfire area","Indoor kitchenette",
       "1 electric stove","BBQ grill","Air fryer","Rice cooker","Microwave","Kettle","Pots & pans","Plates & cutlery",
-      "Cozy retro mid-century interior","1 bed + 1 daybed","Free on-site parking","Exterior security cameras",
+      "Cozy retro interiors","1 bed + 1 daybed","Free on-site parking","Exterior security cameras",
     ],
     rules : [
       "Please respect check-in and check-out times.",
@@ -610,6 +616,8 @@ function noteCards(list){ return list.map(p=>`<div class="card"><h3>${esc(p.name
 
 const phoneSvg = '<svg viewBox="0 0 24 24"><path d="M5 4h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5V19a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>';
 const cameraSvg = '<svg viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.2"/></svg>';
+const chatSvg = '<svg viewBox="0 0 24 24"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z"/></svg>';
+const abtn = () => `<a class="abtn" href="${esc(SITE.airbnbUrl)}" target="_blank" rel="noopener">${chatSvg} Open Airbnb messages</a>`;
 function emergencyCards(list){
   return list.map(e=>{
     let acts='';
@@ -628,7 +636,7 @@ const RENDER = {
     </div>
     <div class="card"><h3>Getting in</h3><p>${esc(u.checkinNote)}</p></div>
     ${(u.checkoutHighlight||u.checkoutIntro) ? `<div class="card"><h3>Before you check out</h3>${
-      u.checkoutHighlight ? `<div class="callout">${cameraSvg}<span>${esc(u.checkoutHighlight)}</span></div>` : ''}${
+      u.checkoutHighlight ? `<div class="callout"><div class="callout-row">${cameraSvg}<span>${esc(u.checkoutHighlight)}</span></div>${abtn()}</div>` : ''}${
       u.checkoutIntro ? `<p>${esc(u.checkoutIntro)}</p>` : ''}${
       u.checkoutList&&u.checkoutList.length ? `<ul class="rules">${u.checkoutList.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>` : ''}${
       u.checkoutNote ? `<p style="margin-top:12px">${esc(u.checkoutNote)}</p>` : ''}</div>` : ''}`,
@@ -678,7 +686,7 @@ const RENDER = {
   grocery:  () => groupCards(SITE.grocery),
 
   emergency: () => `
-    <div class="card"><h3>Need anything?</h3><p>${esc(SITE.hostMsg)}</p></div>
+    <div class="card"><h3>Need anything?</h3><p>${esc(SITE.hostMsg)}</p>${abtn()}</div>
     <div class="group-h">Emergency contacts</div>${emergencyCards(SITE.emergency)}`,
 };
 
@@ -711,7 +719,7 @@ function fillStatic(){
   $('cv-name').textContent = SITE.brand;
   $('cv-tag').textContent = SITE.coverTag;
   $('cv-img').src = SITE.coverImage;
-  $('home-memo').innerHTML = `<h4>Need anything?</h4><p>${esc(SITE.hostMsg)}</p>`;
+  $('home-memo').innerHTML = `<h4>Need anything?</h4><p>${esc(SITE.hostMsg)}</p>${abtn()}`;
   document.title = SITE.brand + " · Guest Guide";
 }
 
