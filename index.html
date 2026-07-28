@@ -274,7 +274,7 @@ const SITE = {
     ]},
     { heading:"Underrated Antipolo hidden gems", items:[
       { name:"Dinglehopper", note:"Laid-back pizza, pasta and taco dining. Strictly by reservation through Facebook.", img:"", linkLabel:"Reserve on Facebook", url:"https://www.facebook.com/p/Dinglehopper-100092543491883/" },
-      { name:"SaWrap sa Taktak", note:"Must-try birria and tapa .", img:"", url:"https://maps.app.goo.gl/WD8gtcWYYvS8RSJR8" },
+      { name:"SaWrap sa Taktak", note:"Must-try birria and tapa wraps.", img:"", url:"https://maps.app.goo.gl/WD8gtcWYYvS8RSJR8" },
       { name:"Chawasdee", note:"Authentic Thai — try their tom yum and pad thai!", img:"", url:"https://maps.app.goo.gl/xiU1HZiPBvYNQ6dPA" },
     ]},
     { heading:"Date night · city lights", items:[
@@ -407,16 +407,79 @@ const UNITS = {
   },
 
   airpod2 : {
-    name:"Airpod 2", desc:"Currently not available", capacity:"—",
+    name:"Airpod 2", desc:"Warm and Cozy retro retreat on the 1st floor", capacity:"Sleeps 4 guests",
     image:"https://a0.muscache.com/im/pictures/hosting/Hosting-881624217962132862/original/a6b439c4-3c25-4871-8979-1e301112e414.jpeg?im_w=720",
-    locked:true,
+    imgStyle:"transform:scale(1.7);transform-origin:50% 78%;",
+    locked:false,
+    layout:"1 bedroom · 1 bed + 1 daybed",
+    checkin:"3:00 PM – 9:00 PM", checkout:"Before 11:00 AM",
+    checkinNote:"Self check-in with the on-site staff. You'll have the whole 1st floor of the villa — veranda, kitchenette, bonfire area and parking. Your host sends exact entry details before arrival.",
+    checkoutHighlight:"Please send photos of the room to the Airbnb app before leaving.",
+    checkoutIntro:"As you prepare to go, kindly check that these are all accounted for:",
+    checkoutList:["Plates and saucers","Spoons and forks","Mugs","Bath towels","No stains on the sheets"],
+    checkoutNote:"Kindly place the keys back inside the keybox. If you need help with your bags, please message us on Airbnb.",
+    wifiName:"Airpod Guest", wifiPass:"Relax@airpod",
+    wifiNote:"Heads up: the \"R\" in Relax is capital — Relax@airpod.",
+
+    parking:"Free on-site parking — we reserve a slot for you (maximum capacity 4 guests). From the parking area, take a flight of stairs down to the villa past the overlooking garden. Please travel light; our staff are happy to help with heavy luggage.",
+
+    features : [
+      { name:"Veranda", note:"Outdoor veranda with outdoor seating.", img:"" },
+      { name:"Bonfire area", note:"One complimentary firewood bundle. Enjoy 7:00–10:30 PM; message us 7:00–9:00 PM (last call) to have staff light it.", img:"" },
+      { name:"Indoor kitchenette", note:"Cook or reheat meals with ease — plates, spoons, forks, BBQ grill, pan, pot, 1 electric stove, microwave, kettle, air fryer and rice cooker.", img:"" },
+      { name:" Cozy retro mid-century interior", note:"Sleeps 4 across 2 rooms.", img:"" },
+    ],
+    amenities : [
+      "Air conditioning","Fast wifi","TV + wifi","Veranda","Bonfire area","Indoor kitchenette",
+      "1 electric stove","BBQ grill","Air fryer","Rice cooker","Microwave","Kettle","Pots & pans","Plates & cutlery",
+      "Cozy retro mid-century interior","1 bed + 1 daybed","Free on-site parking","Exterior security cameras",
+    ],
+    rules : [
+      "Please respect check-in and check-out times.",
+      "Smoking is allowed outdoors only — never inside the villa.",
+      "Quiet hours 10:30 PM – 7:00 AM — please keep noise low for neighbours.",
+      "Bonfire in the designated area, 7:00 PM – 10:30 PM. One complimentary firewood bundle — message us 7:00–9:00 PM (last call) to have staff light it.",
+      "Please wash used dishes and dispose of trash before checkout.",
+      "Be mindful of nature and wildlife; handle furniture and decor with care.",
+      "No unregistered guests. Day visitors welcome until 7:00 PM (overstaying fee: ₱1,500/head).",
+      "No wild parties or illegal activities — violation means immediate cancellation.",
+      "No pets, please (sorry!).",
+    ],
+    faqs : [
+      { q:"How do I check in?", a:"On arrival, please register your vehicle and guest names at the guard house. Allot 5 minutes as we validate your booking." },
+      { q:"Where do I park?", a:"We reserve a parking slot for you at the top of the property. From there, take the stairs down to the villa." },
+      { q:"Can we use the bonfire?", a:"Yes! One complimentary bundle of firewood is provided. You can enjoy the bonfire from 7:00 PM to 10:30 PM — to have our staff light it, message us on Airbnb between 7:00 and 9:00 PM (last call). Bring s'mores and your favourite drinks 🔥" },
+      { q:"Can we bring extra guests?", a:"Bookings follow the confirmed guest count. Extra guests not in the booking are charged ₱1,500 per guest, per night on-site — please update your booking on the app before arrival. Maximum capacity is 4 guests." },
+      { q:"Is housekeeping included?", a:"Your unit is professionally cleaned before check-in. Daily housekeeping and linen/towel changes aren't included in the rate (linen changes are provided only for long stays of 5+ nights). Mid-stay cleaning or fresh linens are available for an extra charge — just message us." },
+      { q:"Is there aircon and wifi?", a:"Yes — the cabin is air-conditioned with fast wifi. See the Wifi and How-Tos sections." },
+      { q:"How do we order food?", a:"There's no in-house restaurant, but Grab and Foodpanda both deliver here. Deliveries can only reach the guard house, not the villa door — we'll help you bring them down." },
+    ],
+    howtos : [
+      { name:"Air-conditioner (Daikin)", img:"", steps:[
+          "Power on: press the power button on the white Daikin remote.",
+          "Check the mode is set to Cooling (the ❄️ snowflake symbol, not the fan).",
+          "Use the arrow buttons to set your desired temperature.",
+          "Please switch off the AC whenever you leave the cabin.",
+        ], tip:"" },
+      { name:"Microwave", img:"", steps:[
+          "Use microwave-safe dishes only — never metal, steel, or aluminium foil.",
+          "Turn the power dial to Medium or High.",
+          "Turn the timer knob to start heating.",
+        ], tip:"Don't force the timer knob back to zero. If your food's ready early, just unplug the unit." },
+      { name:"Air fryer", img:"", steps:[
+          "Cookware: use air-fryer-safe pans, glass, ceramic or silicone moulds. Never plastic, microwave-only containers, or paper towels.",
+          "Set time: tap the Timer button on the screen, then use + or − to adjust the minutes.",
+          "Set temperature: tap the Temp button, then use + or − to raise or lower the degrees.",
+          "Start / stop: press Play / Pause to begin cooking, or pause any time to check your food.",
+        ], tip:"" },
+    ],
   },
 
   airpod3 : {
     name:"Airpod 3", desc:"Forest hideaway for families & barkada", capacity:"Sleeps 6–8 guests",
     image:"https://a0.muscache.com/im/pictures/hosting/Hosting-881624217962132862/original/42ab5174-f388-4b86-8d96-e2833f100b63.jpeg?im_w=720",
     locked:false,
-    layout:"2 bedrooms · 5 beds · Separate toilet & bath",
+    layout:"2 bedrooms · 6 beds · Separate toilet & bath",
     checkin:"3:00 PM – 9:00 PM", checkout:"Before 11:00 AM",
     checkinNote:"Self check-in with the on-site staff. You'll have the whole 2nd-floor villa — veranda, outdoor kitchenette, backyard, bonfire area and parking. Host sends exact entry details before arrival.",
     checkoutHighlight:"Please send photos of the room to the Airbnb app before leaving.",
@@ -631,7 +694,7 @@ function buildUnits(){
           <div class="lock-badge"><svg viewBox="0 0 24 24">${ICONS.lock}</svg> Not available</div></div></div>`;
     }
     return `<button class="unit-card" onclick="openUnit('${key}')">
-      <div class="unit-thumb"><img src="${esc(u.image)}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
+      <div class="unit-thumb"><img src="${esc(u.image)}" alt="" style="${esc(u.imgStyle||'')}" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>
       <div class="unit-info"><h3>${esc(u.name)}</h3><div class="desc">${esc(u.desc)}</div>
         <span class="cap">${esc(u.capacity)}</span></div>
       <div class="unit-arrow"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></button>`;
